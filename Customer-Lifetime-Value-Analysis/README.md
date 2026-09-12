@@ -1,364 +1,193 @@
-# Customer Lifetime Value (CLV) Analysis
-## Marketing Analytics HW2
+# Customer Lifetime Value Analysis
 
-**Course:** Marketing Analytics 
-**Level:** Graduate  
-**Assignment Weight:** 10% of Final Grade 
-**Dataset:** FMCG Customer Behavior and Marketing Analytics Dataset 
-**Submission Format:** Individual Assignment - Github submission
+## Overview
 
----
+This project develops a customer lifetime value (CLV) and purchase prediction framework using transactional customer data. The analysis combines **RFM customer segmentation**, **BG/NBD purchase prediction**, and **CLV estimation** to identify high-value customers and support customer retention and marketing decisions.
 
-# 1. Assignment Overview
+The project was originally completed as part of a Marketing Analytics assignment and has been organized here as a portfolio project.
 
-Customer Lifetime Value (CLV) is one of the most important metrics used by organizations to evaluate customer profitability and guide marketing investments. In this assignment, you will analyze customer transaction data from a Fast-Moving Consumer Goods (FMCG) retailer and estimate customer value using both descriptive and predictive analytics techniques.
+## Objectives
 
-You will explore customer purchasing behavior, perform customer segmentation using RFM analysis, estimate Customer Lifetime Value (CLV), and provide evidence-based business recommendations.
+* Segment customers using RFM analysis.
+* Model customer purchasing behavior using the **BG/NBD model**.
+* Estimate expected customer profit using the **Gamma-Gamma model**.
+* Calculate customer lifetime value across 30-day, 90-day, and 365-day horizons.
+* Validate purchase predictions using a leakage-free holdout period.
+* Compare predicted CLV with actual holdout-period revenue.
+* Identify high-value customer segments and individual customers.
+* Analyze product-category behavior across CLV segments.
 
-The goal is to demonstrate your ability to transform raw customer data into actionable managerial insights.
+## Methodology
 
----
+### 1. RFM Segmentation
 
-# 2. Learning Outcomes
+Customers were evaluated using:
 
-Upon successful completion of this assignment, students will be able to:
+* **Recency** – how recently the customer purchased.
+* **Frequency** – number of repeat purchases.
+* **Monetary Value** – customer spending.
 
-- Prepare and clean transactional customer datasets.
-- Conduct exploratory data analysis (EDA).
-- Calculate and interpret RFM metrics.
-- Estimate Customer Lifetime Value (CLV).
-- Segment customers based on profitability.
-- Develop data-driven marketing recommendations.
-- Communicate analytical findings in a professional business report.
+The resulting RFM segments include:
 
----
+* Champions
+* Potential Loyalists
+* Loyal Customers
+* Recent Customers
+* Need Attention
+* Hibernating
+* At Risk High Value
+* At Risk
 
-# 3. Dataset
+### 2. BG/NBD Model
 
-### FMCG Customer Behavior and Marketing Analytics Dataset
+The Beta-Geometric/Negative Binomial Distribution (BG/NBD) model was used to estimate:
 
-Kaggle Dataset:
+* Probability that a customer is still active.
+* Expected future purchases.
 
-https://www.kaggle.com/datasets/shuchismitamallick/fmcg-customer-behavior-and-marketing-analytics-data
+A leakage-free temporal validation framework was used:
 
-Students must import the dataset in a PostgreSQL Database accordingly to the provided ER diagram.
+**Calibration period:**
+2023-02-26 to 2025-11-22
 
-Python code must connect to the Database and SQL based queries shall be embedded in the code.
+**Holdout period:**
+2025-11-23 to 2026-02-21
 
-SQL based data ingestion scripts are deliverables and part of the final submission
+The final leakage-free BG/NBD validation produced:
 
-```python
-# psycopg2 library allows to connect to PostGREs DB
+| Metric              |    Result |
+| ------------------- | --------: |
+| MAE                 |     1.334 |
+| RMSE                |    1.9881 |
+| R²                  |      0.77 |
+| Correlation         |    0.8779 |
+| Predicted purchases | 29,540.86 |
+| Actual purchases    |    28,517 |
 
-import psycopg2
+The strong correlation and R² indicate that the model captured the overall differences in customer purchasing activity reasonably well.
 
-db_connection = psycopg2.connect(dbname='test',
-                                 user=<username>,
-                                 password=<password>,
-                                 host='localhost',
-                                 port=5432)
+### 3. Customer Lifetime Value
 
-print("Successfully connected to the database.")
-```
-Kind reminder, PostgreSQL has been shipped with your lab envirnment as a docker container. However, if you prefer a local installation, please follow below references.
+CLV was estimated using predicted purchasing behavior and expected average profit.
 
-Plese, here is where you can download PostgreSQL [installer](https://www.postgresql.org/download/)
+CLV was calculated for:
 
-[On Mac Install](https://www.geeksforgeeks.org/postgresql/install-postgresql-on-mac/)
-[On Windows Install](https://www.geeksforgeeks.org/postgresql/install-postgresql-on-windows/)
+* 30-day horizon
+* 90-day horizon
+* 365-day horizon
 
-[GUI tools for Postgre SQL](https://www.geeksforgeeks.org/postgresql/gui-tools-for-postgresql/)
+The final CLV validation compared predicted 90-day CLV against actual holdout-period revenue.
 
-Please, check the following [SQL in python](https://www.geeksforgeeks.org/python/postgresql-python-querying-data/)
+| Metric                       |        Result |
+| ---------------------------- | ------------: |
+| MAE                          |      1,140.64 |
+| RMSE                         |      1,813.55 |
+| Correlation                  |        0.8231 |
+| Total predicted 90-day CLV   | 19,970,196.52 |
+| Total actual holdout revenue | 19,616,944.23 |
 
-Please, check [PostgreSQL tutorial](https://www.geeksforgeeks.org/postgresql/postgresql-tutorial/)
+The predicted and actual aggregate values are relatively close, while the correlation indicates that the model successfully captures substantial variation in customer value.
 
----
+## Key Findings
 
-# Required Libraries
+### RFM and CLV
 
-Students MUST use the following libraries based on Python version at least 3.10:
+The highest-value customers are concentrated in the **Champions** segment.
 
-```python
-pandas
-numpy
-matplotlib
-scikit-learn
-lifetimes
-seaborn
-decimal
-datetime
-```
+Champions had:
 
-Install dependencies:
+* 2,306 customers
+* Average 90-day CLV of approximately **5,065.79**
+* Total predicted 90-day CLV of approximately **11.68 million**
 
-```bash
-pip install pandas numpy matplotlib scikit-learn lifetimes seaborn decimal datetime
-```
----
-# 4. Business Scenario
+Other important segments include Potential Loyalists and Loyal Customers.
 
-You have recently joined the marketing analytics team of an FMCG retailer.
+### CLV Tiers
 
-Senior management would like to answer the following questions:
+Customers were additionally grouped into four CLV tiers:
 
-1. Which customers generate the highest value?
-2. Which customers are at risk of churn?
-3. How should marketing resources be allocated across customer segments?
-4. What customer retention strategies should be implemented?
-5. Which customers should be prioritized for loyalty programs?
+* Bronze
+* Silver
+* Gold
+* Platinum
 
-Your analysis should provide evidence-based recommendations to support managerial decision making.
+Platinum customers represented approximately 20% of customers but had the highest predicted 365-day CLV, with an average of approximately **24,079** per customer.
 
----
+### Highest-Value Customers
 
-# 5. Assignment Tasks
+The highest predicted 365-day CLV customer had an estimated CLV of approximately **208,824**.
 
-## Part A – Data Understanding and Preparation (5 Points)
+The top predicted CLV customers were overwhelmingly classified as **Champions**, demonstrating the relationship between strong historical purchasing behavior and predicted future customer value.
 
-### Requirements
+## Product Category Analysis
 
-1. Load the dataset.
-2. Describe the available variables.
-3. Identify missing values and data quality issues.
-4. Perform any necessary data cleaning.
-5. Provide summary statistics.
+Product purchasing behavior was analyzed across CLV segments.
 
-### Deliverables
+Across the major CLV segments, **Beverages (Coffee/Malt)** was the highest-quantity product category, followed by categories such as:
 
-- Data dictionary summary
-- Missing value assessment
-- Descriptive statistics table
-- Discussion (200–300 words)
+* Dairy & Nutrition
+* Confectionery
+* Culinary (Soups/Seasonings)
+* Bottled Water
 
----
+This analysis provides an additional perspective for designing segment-specific marketing and product strategies.
 
-## Part B – Exploratory Data Analysis (10 Points)
+## Business Implications
 
-### Requirements
+The analysis can support marketing decisions such as:
 
-Conduct exploratory analysis to understand customer behavior.
+* Prioritizing retention efforts for high-CLV customers.
+* Developing loyalty programs for Champions and Platinum customers.
+* Identifying customers with high potential future value.
+* Designing targeted reactivation campaigns for At Risk and Hibernating customers.
+* Using predicted purchasing behavior to support campaign planning.
+* Tailoring product recommendations by customer value segment.
 
-Include visualizations for:
+## Validation Approach
 
-- Customer spending distribution
-- Purchase frequency distribution
-- Revenue by product category
-- Customer demographics
-- Revenue concentration among customers
-- Time-based purchasing trends
+A temporal holdout methodology was used to reduce information leakage.
 
-### Deliverables
+Customer behavior observed during the calibration period was used to train the predictive models, while transactions occurring during the subsequent holdout period were reserved for validation.
 
-- Minimum of five visualizations
-- Interpretation of each visualization
-- Summary of key findings
+This provides a more realistic assessment of how the models would perform when predicting future customer behavior.
 
----
-
-## Part C – RFM Analysis (25 Points)
-
-### Step 1: Calculate RFM Metrics
-
-#### Recency
-
-Number of days since the most recent purchase.
-
-#### Frequency
-
-Number of purchases made by the customer.
-
-#### Monetary Value
-
-Total spending by the customer.
-
-### Step 2: RFM Scoring
-
-Assign scores from 1–5 using quantiles.
-
-Example:
+## Project Structure
 
 ```text
-RFM Score = R × 100 + F × 10 + M
+Customer-Lifetime-Value-Analysis/
+│
+├── Customer_Lifetime_Value_Analysis.ipynb
+├── CLV_BG_NBG.pdf
+├── README.md
+└── .gitignore
 ```
 
-### Deliverables
+The raw `data/` directory is intentionally excluded from the public repository.
 
-- Customer-level RFM table
-- Distribution of RFM scores
-- Top 10 customers by RFM score
-- Interpretation of customer behavior patterns
+## Tools & Technologies
 
----
+* Python
+* Pandas
+* NumPy
+* Matplotlib
+* Seaborn
+* Scikit-learn
+* Lifetimes
+* Jupyter Notebook
 
-## Part D – Customer Lifetime Value Analysis (25 Points)
+## Files
 
-### Objective
+**Customer_Lifetime_Value_Analysis.ipynb**
+Complete analysis, modeling, validation, segmentation, and visualizations.
 
-Estimate customer lifetime value using a simplified CLV framework.
+**CLV_BG_NBG.pdf**
+Project report containing the analysis and results.
 
-### Average Purchase Value
+**README.md**
+Project documentation and methodology summary.
 
-```text
-APV = Total Revenue / Number of Transactions
-```
+## Conclusion
 
-### Purchase Frequency
+This project demonstrates an end-to-end customer analytics workflow, progressing from descriptive RFM segmentation to probabilistic purchase prediction and customer lifetime value estimation.
 
-```text
-PF = Number of Transactions / Number of Customers
-```
-
-### Churn Rate
-
-Assume customers who have not purchased within the previous 90 days are considered churned.
-
-```text
-Churn Rate = Churned Customers / Total Customers
-```
-
-### Customer Lifetime Value
-
-```text
-CLV = (APV × PF) / Churn Rate
-```
-
-### Deliverables
-
-- CLV methodology
-- Customer-level CLV table
-- CLV distribution visualization
-- Top 20 customers by CLV
-
----
-
-# Part E - Predict CLV (25 Points)
-
-Develop a predictive CLV model:
-
-- Define the prediction model justifying your choice on dataset structure and analysis
-
-hint: please check out the [BG/NBD](https://arxiv.org/html/2501.04719v1) 
-
-Evaluate performance using:
-
-- RMSE
-- MAE
-- R²
-
-Discuss:
-
-- Model performance
-- Key predictive variables
-- Practical implications
-
----
-
-## Part F – Customer Segmentation (5 Points)
-
-Using CLV estimates, create the following customer segments.
-
-| Segment | Definition |
-|----------|------------|
-| Platinum | Top 20% |
-| Gold | Next 30% |
-| Silver | Next 30% |
-| Bronze | Bottom 20% |
-
-### Analyze
-
-- Average spending
-- Purchase frequency
-- Customer demographics
-- Product preferences
-
-### Deliverables
-
-- Segment summary table
-- Segment visualizations
-- Segment profiles
-
----
-
-## Part G – Managerial Recommendations (5 Points)
-
-Prepare recommendations for senior management.
-
-Address:
-
-- Customer retention
-- Loyalty programs
-- Resource allocation
-- Promotional strategies
-- Customer acquisition priorities
-
-### Deliverables
-
-500–750 word executive recommendation section.
-
----
-
-# Submission Requirements
-
-## Required Deliverables
-
-###  Python and SQL
-
-Include:
-- Scripts or list of commands for data ingestion and DB creation
-- SQL DB DUMP
-- Code
-- Visualizations
-- Explanations
-
-### 2. Presentation Report (PDF)
-
-Recommended length:
-
-**4–6 pages (excluding appendix)**
-
-### Report Structure
-
-1. Executive Summary
-2. Data Overview
-3. Exploratory Analysis
-4. RFM Analysis
-5. CLTV Analysis
-6. Customer Segmentation
-7. CLTV prediction
-8. Recommendations
-9. Conclusion
-
----
-
-# 6. Assessment Rubric
-
-| Criterion | Marks |
-|------------|-------|
-| Data Preparation | 5 |
-| Exploratory Analysis | 10 |
-| RFM Analysis | 25 |
-| CLV Analysis | 25 |
-| Predictive Modeling | 25 |
-| Customer Segmentation | 5 |
-| Recommendations | 5 |
-| **Total** | **100** |
-
----
-
-# 7. Academic Integrity
-
-Students must submit original work.
-
-You may discuss concepts with classmates; however:
-
-- Code must be your own.
-- Visualizations must be your own.
-- Written interpretations must be your own.
-- Any external sources must be properly cited.
-
-Cheating and Use of GenAI for coding, please refer to class syllabus.
-
----
-
-
+The combination of customer segmentation, BG/NBD modeling, CLV estimation, temporal validation, and product-category analysis provides a practical framework for identifying valuable customers and supporting data-driven marketing strategies.
