@@ -1,0 +1,4 @@
+evaluation_set,coverage_percentage
+Train,34.77
+Test / Holdout,36.08
+All Data,35.03

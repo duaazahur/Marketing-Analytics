@@ -1,0 +1,10 @@
+metric,geo_granularity,evaluation_set,value
+R_Squared,national,Train,0.7460041
+R_Squared,national,Test,0.7104211
+R_Squared,national,All Data,0.7401868
+MAPE,national,Train,0.182749
+MAPE,national,Test,0.1649091
+MAPE,national,All Data,0.17918381
+wMAPE,national,Train,0.16651377
+wMAPE,national,Test,0.15923317
+wMAPE,national,All Data,0.16507848
