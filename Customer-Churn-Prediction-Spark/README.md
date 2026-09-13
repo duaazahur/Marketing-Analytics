@@ -115,13 +115,13 @@ The results demonstrate an end-to-end Spark machine learning workflow for custom
 
 Among the three evaluated models, Logistic Regression provided the strongest overall predictive performance on both datasets.
 
-##Technologies
+## Technologies
 
-Python
-PySpark
-Apache Spark ML
-Pandas
-Jupyter Notebook
+- Python
+- PySpark
+- Apache Spark ML
+- Pandas
+- Jupyter Notebook
 
 ## Project Structure
 
@@ -131,4 +131,3 @@ Customer-Churn-Prediction-Spark/
 ├── Customer_Churn_Prediction_Spark.ipynb
 ├── HW3_final_model_results.csv
 └── README.md
-
