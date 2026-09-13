@@ -1,0 +1,7 @@
+Dataset,Model,Accuracy,Precision,Recall,F1,ROC_AUC
+Dataset 1,Logistic Regression,0.81074,0.810689,0.81074,0.810687,0.896021
+Dataset 1,Random Forest,0.794467,0.795334,0.794467,0.793902,0.875829
+Dataset 1,Gradient-Boosted Trees,0.803355,0.803305,0.803355,0.803314,0.88846
+Dataset 2,Logistic Regression,0.939912,0.937465,0.939912,0.938208,0.968957
+Dataset 2,Random Forest,0.92499,0.923488,0.92499,0.914168,0.948949
+Dataset 2,Gradient-Boosted Trees,0.936132,0.933847,0.936132,0.934685,0.965763
