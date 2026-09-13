@@ -60,8 +60,6 @@ Six paid-media channels were included in the marketing mix model:
 
 The model also incorporates non-paid and control variables such as organic traffic, email, referral traffic, trend, seasonality, and Black Friday effects.
 
-> **Note:** The raw dataset is not included in the public portfolio repository unless redistribution is permitted.
-
 ---
 
 ## Methodology
@@ -351,9 +349,7 @@ Marketing-Mix-Modeling-Meridian-SHAP/
 ├── BUSINESS_RECOMMENDATION.md
 ├── requirements.txt
 ├── .gitignore
-│
-├── notebooks/
-│   └── Marketing_Mix_Modeling_Meridian_SHAP.ipynb
+├── Marketing_Mix_Modeling_Meridian_SHAP.ipynb
 │
 ├── outputs/
 │   ├── charts/
