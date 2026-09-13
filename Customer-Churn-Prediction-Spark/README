@@ -123,10 +123,3 @@ Customer-Churn-Prediction-Spark/
 ├── Customer_Churn_Prediction_Spark.ipynb
 ├── HW3_final_model_results.csv
 └── README.md
-
-Technologies
-Python
-PySpark
-Apache Spark ML
-Pandas
-Jupyter Notebook
